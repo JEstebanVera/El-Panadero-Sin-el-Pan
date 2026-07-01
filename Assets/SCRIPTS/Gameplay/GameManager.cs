@@ -72,6 +72,9 @@ public class GameManager : MonoBehaviour
         Destroy(obstacleObj);
         lives--;
 
+        // Shake de cámara siempre que recibes daño
+        FindFirstObjectByType<CameraFollow>().TriggerShake();
+
         if (lives <= 0)
         {
             gameActive = false;

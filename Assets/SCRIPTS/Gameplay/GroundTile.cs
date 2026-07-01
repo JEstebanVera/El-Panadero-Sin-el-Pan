@@ -1,70 +1,108 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class GroundTile : MonoBehaviour
 {
     GroundSpawner groundSpawner;
-
     public GameObject obstaclePrefab;
-
+    public GameObject tallObstaclePrefab;
     public GameObject coinPrefab;
+    public int coinsToSpawn = 1;
+
+    [HideInInspector] public bool isFirstTile = false;
+
+    private float[] lanePositions = { -2.5f, 0f, 2.5f };
+
+    // Guarda dónde se spawnearon obstáculos para evitarlos con las monedas
+    private List<Vector3> obstaclePositions = new List<Vector3>();
 
     private void Start()
     {
         groundSpawner = GameObject.FindFirstObjectByType<GroundSpawner>();
-        SpawnObstacle();
+        
+        if (!isFirstTile)
+        {
+            SpawnObstacle();
+        }
+
         SpawnCoins();
     }
-
 
     private void OnTriggerExit(Collider other)
     {
         groundSpawner.SpawnTile();
         Destroy(gameObject, 2);
     }
-    private void Update()
-    {
-
-    }
 
     void SpawnObstacle()
     {
-        // Elige una posicion random para spawnear
-        int obstacleSpawnIndex = Random.Range(2, 5);
-        Transform spawnPoint = transform.GetChild(obstacleSpawnIndex).transform;
+        int obstacleCount = Random.Range(1, 3);
+        Collider tileCollider = GetComponent<Collider>();
 
-        // Spawnear el obstaculo en la posicion
-        Instantiate(obstaclePrefab, spawnPoint.position, Quaternion.identity, transform);
+        int[] availableLanes = { 0, 1, 2 };
+        ShuffleArray(availableLanes);
+
+        for (int i = 0; i < obstacleCount; i++)
+        {
+            float laneX = lanePositions[availableLanes[i]];
+            float randomZ = Random.Range(tileCollider.bounds.min.z, tileCollider.bounds.max.z);
+
+            Vector3 spawnPos = new Vector3(laneX, 0.5f, randomZ);
+            obstaclePositions.Add(spawnPos); // Guardamos la posición
+
+            GameObject prefabToSpawn = Random.value < 0.5f ? obstaclePrefab : tallObstaclePrefab;
+            Instantiate(prefabToSpawn, spawnPos, Quaternion.identity, transform);
+        }
     }
 
     void SpawnCoins()
     {
-        float[] lanePositions = { -2.5f, 0f, 2.5f };
-        int coinsToSpawn = 1;
+        Collider tileCollider = GetComponent<Collider>();
+        float minSafeDistance = 3f; // Distancia mínima en Z respecto a un obstáculo en el mismo carril
 
-        for (int i = 0; i < coinsToSpawn; i++)
+        int attempts = 0;
+        int coinsSpawned = 0;
+
+        while (coinsSpawned < coinsToSpawn && attempts < coinsToSpawn * 1)
         {
-            int randomLane = Random.Range(0, lanePositions.Length);
-            float randomZ = Random.Range(GetComponent<Collider>().bounds.min.z,
-                                         GetComponent<Collider>().bounds.max.z);
+            attempts++;
 
-            Vector3 spawnPos = new Vector3(lanePositions[randomLane], 1f, randomZ);
-            Instantiate(coinPrefab, spawnPos, Quaternion.identity, transform);
+            int randomLane = Random.Range(0, lanePositions.Length);
+            float laneX = lanePositions[randomLane];
+            float randomZ = Random.Range(tileCollider.bounds.min.z, tileCollider.bounds.max.z);
+
+            Vector3 spawnPos = new Vector3(laneX, 1f, randomZ);
+
+            if (IsFarFromObstacles(spawnPos, minSafeDistance))
+            {
+                Instantiate(coinPrefab, spawnPos, Quaternion.identity, transform);
+                coinsSpawned++;
+            }
         }
     }
 
-    Vector3 GetRandomPointInCollider (Collider collider)
+    bool IsFarFromObstacles(Vector3 pos, float minDistance)
     {
-        Vector3 point = new Vector3(
-            Random.Range(collider.bounds.min.x, collider.bounds.max.x),
-            Random.Range(collider.bounds.min.x, collider.bounds.max.y),
-            Random.Range(collider.bounds.min.x, collider.bounds.max.z)
-            );
-        if (point != collider.ClosestPoint(point))
+        foreach (Vector3 obstaclePos in obstaclePositions)
         {
-            point = GetRandomPointInCollider(collider);
+            // Solo importa si están en el mismo carril (mismo X)
+            if (Mathf.Approximately(pos.x, obstaclePos.x))
+            {
+                if (Mathf.Abs(pos.z - obstaclePos.z) < minDistance)
+                    return false;
+            }
         }
+        return true;
+    }
 
-        point.y = 1;
-        return point;
+    void ShuffleArray(int[] array)
+    {
+        for (int i = array.Length - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            int temp = array[i];
+            array[i] = array[randomIndex];
+            array[randomIndex] = temp;
+        }
     }
 }
