@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     [Header("Speed")]
     public PlayerMovement playerMovement;
     private float speedTimer = 0f;
-    public float speedIncreaseInterval = 30f; // cada 30 segundos
+    public float speedIncreaseInterval = 10f; // cada 10 segundos
     public float speedIncreaseAmount = 1f;
 
     void Start()
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateCoinHUD()
     {
-        coinText.text = "Coins: " + coinsThisRun;
+        coinText.text =  coinsThisRun.ToString();
     }
 
 
