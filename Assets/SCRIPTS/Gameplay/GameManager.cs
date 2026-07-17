@@ -66,7 +66,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-
     public void TakeDamage(GameObject obstacleObj, GameObject playerObj)
     {
         Destroy(obstacleObj);
@@ -89,6 +88,9 @@ public class GameManager : MonoBehaviour
             float bestTime = PlayerPrefs.GetFloat("BestTime", 0f);
             if (timeAlive > bestTime)
                 PlayerPrefs.SetFloat("BestTime", timeAlive);
+
+
+            HighscoreTable.AddEntry(timeAlive);
 
             PlayerPrefs.Save();
 

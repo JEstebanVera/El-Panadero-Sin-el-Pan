@@ -37,6 +37,7 @@ public class MainMenu : MonoBehaviour
     {
         PlayerPrefs.SetInt("TotalCoins", 0);
         PlayerPrefs.SetFloat("BestTime", 0f);
+        HighscoreTable.ResetHighscores();
         PlayerPrefs.Save();
 
         // Actualizar UI inmediatamente sin recargar escena
@@ -45,6 +46,7 @@ public class MainMenu : MonoBehaviour
 
         Debug.Log("Datos reseteados.");
     }
+
 
     public void QuitGame()
     {
