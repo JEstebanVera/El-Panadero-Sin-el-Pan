@@ -6,7 +6,7 @@ public class MainMenu : MonoBehaviour
 {
     [Header("UI")]
     public TextMeshProUGUI totalCoinsText;
-    public TextMeshProUGUI bestTimeText;
+
 
     void Start()
     {
@@ -20,7 +20,6 @@ public class MainMenu : MonoBehaviour
 
         int minutes = Mathf.FloorToInt(bestTime / 60f);
         int seconds = Mathf.FloorToInt(bestTime % 60f);
-        bestTimeText.text = string.Format("Best: {0:00}:{1:00}", minutes, seconds);
     }
 
     public void PlayGame()
@@ -42,7 +41,6 @@ public class MainMenu : MonoBehaviour
 
         // Actualizar UI inmediatamente sin recargar escena
         totalCoinsText.text = "Coins: 0";
-        bestTimeText.text = "Best: 00:00";
 
         Debug.Log("Datos reseteados.");
     }

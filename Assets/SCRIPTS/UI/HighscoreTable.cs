@@ -13,16 +13,30 @@ public class HighscoreTable : MonoBehaviour
         entryTemplate = entryContainer.Find("highscoreEntryTemplate");
         entryTemplate.gameObject.SetActive(false);
 
+        MigrateBestTimeIfNeeded();
         DisplayHighscores();
+    }
+
+    // Si existe un BestTime guardado del sistema anterior, lo migra al leaderboard
+    private void MigrateBestTimeIfNeeded()
+    {
+        if (!PlayerPrefs.HasKey("BestTime")) return;
+        if (PlayerPrefs.HasKey("BestTimeMigrated")) return; // Ya fue migrado antes
+
+        float bestTime = PlayerPrefs.GetFloat("BestTime", 0f);
+        if (bestTime > 0f)
+        {
+            AddEntry(bestTime);
+            PlayerPrefs.SetInt("BestTimeMigrated", 1);
+            PlayerPrefs.Save();
+        }
     }
 
     // Llamado desde GameManager al morir
     public static void AddEntry(float timeAlive)
     {
-        // Cargar lista actual
         Highscores highscores = LoadHighscores();
 
-        // Agregar nuevo tiempo
         highscores.entries.Add(new HighscoreEntry { time = timeAlive });
 
         // Ordenar de mayor a menor
@@ -32,7 +46,6 @@ public class HighscoreTable : MonoBehaviour
         if (highscores.entries.Count > 5)
             highscores.entries.RemoveRange(5, highscores.entries.Count - 5);
 
-        // Guardar
         string json = JsonUtility.ToJson(highscores);
         PlayerPrefs.SetString("Highscores", json);
         PlayerPrefs.Save();
@@ -42,6 +55,16 @@ public class HighscoreTable : MonoBehaviour
     {
         Highscores highscores = LoadHighscores();
 
+        if (highscores.entries.Count == 0)
+        {
+            // Mostrar mensaje si no hay entradas aún
+            Transform entryTransform = Instantiate(entryTemplate, entryContainer);
+            entryTransform.gameObject.SetActive(true);
+            entryTransform.Find("posText").GetComponent<TextMeshProUGUI>().text = "--";
+            entryTransform.Find("scoreText").GetComponent<TextMeshProUGUI>().text = "00:00";
+            return;
+        }
+
         for (int i = 0; i < highscores.entries.Count; i++)
         {
             CreateEntry(highscores.entries[i], i + 1);
@@ -50,10 +73,12 @@ public class HighscoreTable : MonoBehaviour
 
     private void CreateEntry(HighscoreEntry entry, int rank)
     {
-        float templateHeight = 30f;
+        float templateHeight = 100f; // Coincide con el Height de tu template
+        float padding = 10f;         // Espacio extra entre entradas
+
         Transform entryTransform = Instantiate(entryTemplate, entryContainer);
         RectTransform rect = entryTransform.GetComponent<RectTransform>();
-        rect.anchoredPosition = new Vector2(0, -templateHeight * (rank - 1));
+        rect.anchoredPosition = new Vector2(0, -(templateHeight + padding) * (rank - 1));
         entryTransform.gameObject.SetActive(true);
 
         // Rango
@@ -77,6 +102,7 @@ public class HighscoreTable : MonoBehaviour
     public static void ResetHighscores()
     {
         PlayerPrefs.DeleteKey("Highscores");
+        PlayerPrefs.DeleteKey("BestTimeMigrated"); // Para que pueda migrar de nuevo si hay BestTime
         PlayerPrefs.Save();
     }
 
@@ -88,7 +114,6 @@ public class HighscoreTable : MonoBehaviour
 
         return JsonUtility.FromJson<Highscores>(json);
     }
-
 
     [System.Serializable]
     private class HighscoreEntry
