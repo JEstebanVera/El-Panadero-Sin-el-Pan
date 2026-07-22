@@ -71,7 +71,6 @@ public class GameManager : MonoBehaviour
         Destroy(obstacleObj);
         lives--;
 
-        // Shake de cámara siempre que recibes daño
         FindFirstObjectByType<CameraFollow>().TriggerShake();
 
         if (lives <= 0)
@@ -79,31 +78,57 @@ public class GameManager : MonoBehaviour
             gameActive = false;
             lifeImage.gameObject.SetActive(false);
 
-            // Monedas: sumar las de esta run al total acumulado
+            // Guardar datos
             int savedCoins = PlayerPrefs.GetInt("TotalCoins", 0);
             int newTotal = savedCoins + coinsThisRun;
             PlayerPrefs.SetInt("TotalCoins", newTotal);
 
-            // Tiempo: solo guardar si supera el récord
             float bestTime = PlayerPrefs.GetFloat("BestTime", 0f);
             if (timeAlive > bestTime)
                 PlayerPrefs.SetFloat("BestTime", timeAlive);
 
-
             HighscoreTable.AddEntry(timeAlive);
-
             PlayerPrefs.Save();
 
-            Debug.Log("Monedas esta run: " + coinsThisRun);
-            Debug.Log("Total monedas acumuladas: " + newTotal);
-            Debug.Log("Mejor tiempo: " + PlayerPrefs.GetFloat("BestTime", 0f));
+            // Muerte visual
+            PlayerDeath(playerObj);
 
-            Destroy(playerObj);
-            Invoke("GoToMainMenu", 1f);
+            Invoke("GoToMainMenu", 3f); // Más tiempo para que se vean las partículas
         }
         else
         {
             UpdateLifeHUD();
+        }
+    }
+
+    private void PlayerDeath(GameObject playerObj)
+    {
+        // Desactivar movimiento
+        PlayerMovement pm = playerObj.GetComponent<PlayerMovement>();
+        if (pm != null) pm.alive = false;
+
+        // Ocultar visualmente el player sin destruirlo
+        Renderer playerRenderer = playerObj.GetComponent<Renderer>();
+        if (playerRenderer != null) playerRenderer.enabled = false;
+
+        // Desactivar el Rigidbody para que no siga moviéndose
+        Rigidbody rb = playerObj.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
+
+        // Activar el sistema de partículas hijo
+        ParticleSystem particles = playerObj.GetComponentInChildren<ParticleSystem>(true);
+        if (particles != null)
+        {
+            particles.gameObject.SetActive(true);
+            particles.Play();
+
+            // Destruir el player cuando terminen las partículas
+            Destroy(playerObj, particles.main.duration + particles.main.startLifetime.constantMax);
+        }
+        else
+        {
+            // Si no hay partículas, destruir normal
+            Destroy(playerObj, 1f);
         }
     }
 
