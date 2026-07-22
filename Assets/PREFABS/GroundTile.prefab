@@ -1131,6 +1131,7 @@ MonoBehaviour:
   tallObstaclePrefab: {fileID: 2190821435001128356, guid: 852dba7fb6bc76746bda212d41c79cb1, type: 3}
   coinPrefab: {fileID: 8142568134557459625, guid: 43993f8b286f164489be3243b2fa20a6, type: 3}
   coinsToSpawn: 1
+  isFirstTile: 0
 --- !u!1 &4890623558290778467
 GameObject:
   m_ObjectHideFlags: 0
