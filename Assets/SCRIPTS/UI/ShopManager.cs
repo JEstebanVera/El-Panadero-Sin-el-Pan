@@ -12,6 +12,11 @@ public class ShopManager : MonoBehaviour
     [Header("Skins")]
     public SkinData[] skins; // Arrayde 3 skins configuradas en el Inspector
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip purchaseSound;
+    public AudioClip errorSound;
+
     private int selectedSkin = 0;
 
     private void Awake()
@@ -30,7 +35,7 @@ public class ShopManager : MonoBehaviour
     private void UpdateCoinsUI()
     {
         int coins = PlayerPrefs.GetInt("TotalCoins", 0);
-        coinsText.text = "Coins: " + coins;
+        coinsText.text = "Monedas: " + coins;
     }
 
     // Botones de skin
@@ -47,6 +52,8 @@ public class ShopManager : MonoBehaviour
                 // Comprar y equipar
                 PlayerPrefs.SetInt("TotalCoins", coins - skin.price);
                 PlayerPrefs.SetInt("SkinUnlocked_" + skinIndex, 1);
+                if (audioSource != null && purchaseSound != null)
+                    audioSource.PlayOneShot(purchaseSound);
                 SelectSkin(skinIndex);
                 UpdateCoinsUI();
                 UpdateAllSkinButtons();
@@ -54,6 +61,8 @@ public class ShopManager : MonoBehaviour
             else
             {
                 Debug.Log("Monedas insuficientes.");
+                if (audioSource != null && purchaseSound != null)
+                    audioSource.PlayOneShot(errorSound);
             }
         }
         else

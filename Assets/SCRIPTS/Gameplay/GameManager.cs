@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     private bool gameActive = true;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip damageSound;
+
     [Header("Lives")]
     public int lives = 3;
     public Sprite[] lifeSprites; // 0 = 3 vidas, 1 = 2 vidas, 2 = 1 vida
@@ -24,7 +28,7 @@ public class GameManager : MonoBehaviour
     [Header("Speed")]
     public PlayerMovement playerMovement;
     private float speedTimer = 0f;
-    public float speedIncreaseInterval = 10f; // cada 10 segundos
+    public float speedIncreaseInterval = 5f; // cada 5 segundos
     public float speedIncreaseAmount = 1f;
 
     void Start()
@@ -70,6 +74,8 @@ public class GameManager : MonoBehaviour
     {
         Destroy(obstacleObj);
         lives--;
+        if (audioSource != null && damageSound != null)
+            audioSource.PlayOneShot(damageSound);
 
         FindFirstObjectByType<CameraFollow>().TriggerShake();
 

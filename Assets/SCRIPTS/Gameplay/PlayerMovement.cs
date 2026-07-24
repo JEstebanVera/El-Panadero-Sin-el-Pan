@@ -8,6 +8,10 @@ public class PlayerMovement : MonoBehaviour
     public float laneSwitchSpeed = 10f;
     public Rigidbody rb;
 
+    [Header("Animation")]
+    public Animator animator;
+
+
     [Header("Lane Settings")]
     private float[] lanePositions = { -2.5f, 0f, 2.5f };
     private int currentLane = 1;
@@ -57,13 +61,26 @@ public class PlayerMovement : MonoBehaviour
                 rb.useGravity = true;
             }
         }
+        if (!isJumping && !isGrounded && rb.linearVelocity.y < 0)
+        {
+            rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
+        }
 
         rb.MovePosition(newPosition);
     }
 
     private void CheckGrounded()
     {
+        bool wasGrounded = isGrounded;
         isGrounded = Physics.Raycast(transform.position, Vector3.down, groundRayLength, groundLayer);
+
+        // Al tocar suelo después de saltar, vuelve a Run
+        if (isGrounded && !wasGrounded)
+        {
+            isJumping = false;
+            rb.useGravity = true;
+            animator.SetBool("isJumping", false); // Vuelve a animación de correr
+        }
     }
 
     private void HandleKeyboardInput()
@@ -120,6 +137,7 @@ public class PlayerMovement : MonoBehaviour
         isJumping = true;
         rb.useGravity = false;
         rb.linearVelocity = Vector3.zero;
+        animator.SetBool("isJumping", true);
     }
 
     public void DisablePlayer() { alive = false; }
