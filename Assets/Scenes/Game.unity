@@ -1259,7 +1259,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf3fd46c6c015ea4cac44cf637884ae4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.02
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf3fd46c6c015ea4cac44cf637884ae4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1511,7 +1511,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ab910b5e2146de44bb896667e7e291a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundSpawner
-  groundTile: {fileID: 4886247343918145273, guid: 0f2a3e1e8634e1e40941239972c3335d, type: 3}
+  groundTiles:
+  - {fileID: 4886247343918145273, guid: 0f2a3e1e8634e1e40941239972c3335d, type: 3}
+  - {fileID: 4886247343918145273, guid: 90e1d3c81bd4c8343874d84d48879129, type: 3}
+  - {fileID: 4886247343918145273, guid: 8ae54676e556f1d4bac4ff636d4f82b4, type: 3}
 --- !u!4 &1625768512
 Transform:
   m_ObjectHideFlags: 0

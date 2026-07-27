@@ -2,17 +2,20 @@ using UnityEngine;
 
 public class GroundSpawner : MonoBehaviour
 {
-    public GameObject groundTile;
+    public GameObject[] groundTiles; // Array de tiles variadas en vez de una sola
     Vector3 nextSpawnPoint;
     private int tilesSpawned = 0;
 
     public void SpawnTile()
     {
-        GameObject temp = Instantiate(groundTile, nextSpawnPoint, Quaternion.identity);
+        // Elige una tile aleatoria del array
+        int randomIndex = Random.Range(0, groundTiles.Length);
+        GameObject temp = Instantiate(groundTiles[randomIndex], nextSpawnPoint, Quaternion.identity);
+
         nextSpawnPoint = temp.transform.GetChild(1).transform.position;
 
-        GroundTile gt = temp.GetComponent<GroundTile>();
-        gt.isFirstTile = (tilesSpawned == 0); // Solo el primero es "first tile"
+        //GroundTile gt = temp.GetComponent<GroundTile>();
+        //gt.isFirstTile = (tilesSpawned == 0); // Solo el primero es "first tile"
 
         tilesSpawned++;
     }
