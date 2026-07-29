@@ -32,6 +32,9 @@ public class GameManager : MonoBehaviour
     public float speedIncreaseInterval = 5f; // cada 5 segundos
     public float speedIncreaseAmount = 1f;
 
+
+    public GameObject hitParticlesPrefab; // cuando chocas
+
     void Start()
     {
         inst = this;
@@ -76,7 +79,14 @@ public class GameManager : MonoBehaviour
 
     public void TakeDamage(GameObject obstacleObj, GameObject playerObj)
     {
+        if (hitParticlesPrefab != null)
+        {
+            GameObject particles = Instantiate(hitParticlesPrefab, obstacleObj.transform.position, Quaternion.identity);
+            Destroy(particles, 2f); // Destruir partículas 
+        }
+
         Destroy(obstacleObj);
+
         lives--;
         if (audioSource != null && damageSound != null)
             audioSource.PlayOneShot(damageSound);

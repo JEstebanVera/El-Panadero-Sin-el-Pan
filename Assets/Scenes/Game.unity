@@ -164,6 +164,7 @@ MonoBehaviour:
   playerMovement: {fileID: 113288039}
   speedIncreaseInterval: 5
   speedIncreaseAmount: 1
+  hitParticlesPrefab: {fileID: 2778497456198330134, guid: 761a2c1b853e3ec41b30c01a199a0d58, type: 3}
 --- !u!4 &31038646
 Transform:
   m_ObjectHideFlags: 0
