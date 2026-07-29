@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [Header("Audio")]
     public AudioSource audioSource;
     public AudioClip damageSound;
+    public AudioClip coinSound;
 
     [Header("Lives")]
     public int lives = 3;
@@ -62,6 +63,9 @@ public class GameManager : MonoBehaviour
     {
         coinsThisRun++;
         UpdateCoinHUD();
+
+        if (audioSource != null && coinSound != null)
+            audioSource.PlayOneShot(coinSound);
     }
 
     private void UpdateCoinHUD()
