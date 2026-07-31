@@ -36,7 +36,12 @@ public class MainMenu : MonoBehaviour
     {
         PlayerPrefs.SetInt("TotalCoins", 0);
         PlayerPrefs.SetFloat("BestTime", 0f);
-        HighscoreTable.ResetHighscores();
+        PlayerPrefs.SetInt("SelectedSkin", 0);        // Vuelve a skin default
+        PlayerPrefs.DeleteKey("SkinUnlocked_1");       // Bloquea skin 2
+        PlayerPrefs.DeleteKey("SkinUnlocked_2");       // Bloquea skin 3
+        PlayerPrefs.DeleteKey("BestTimeMigrated");     // Resetea migración de leaderboard
+
+
         PlayerPrefs.Save();
 
         // Actualizar UI inmediatamente sin recargar escena
