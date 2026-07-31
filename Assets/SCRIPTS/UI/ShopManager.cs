@@ -35,7 +35,7 @@ public class ShopManager : MonoBehaviour
     private void UpdateCoinsUI()
     {
         int coins = PlayerPrefs.GetInt("TotalCoins", 0);
-        coinsText.text = "Monedas: " + coins;
+        coinsText.text = coins.ToString();
     }
 
     // Botones de skin
@@ -109,7 +109,6 @@ public class ShopManager : MonoBehaviour
     public class SkinData
     {
         public string skinName;
-        public Material material;
         public int price;
 
         [Header("Referencias UI")]
@@ -119,9 +118,9 @@ public class ShopManager : MonoBehaviour
         public void UpdateButton(int index, bool unlocked, int selectedIndex)
         {
             if (!unlocked)
-                buttonText.text = price + " Coins";
+                buttonText.text = price + " Monedas";
             else if (selectedIndex == index)
-                buttonText.text = "Equipada";
+                buttonText.text = "Equipado";
             else
                 buttonText.text = "Equipar";
 

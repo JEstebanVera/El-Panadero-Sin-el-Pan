@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     public Sprite[] lifeSprites; // 0 = 3 vidas, 1 = 2 vidas, 2 = 1 vida
     public Image lifeImage;
 
+    [Header("UI")]
+    public GameObject gameOverPanel;
+
     [Header("Speed")]
     public PlayerMovement playerMovement;
     private float speedTimer = 0f;
@@ -97,6 +100,7 @@ public class GameManager : MonoBehaviour
         {
             gameActive = false;
             lifeImage.gameObject.SetActive(false);
+            gameOverPanel.SetActive(true);
 
             // Guardar datos
             int savedCoins = PlayerPrefs.GetInt("TotalCoins", 0);
