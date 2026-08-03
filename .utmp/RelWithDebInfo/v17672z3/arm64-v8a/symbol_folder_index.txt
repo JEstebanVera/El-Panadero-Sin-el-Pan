@@ -1,0 +1,1 @@
+C:\Users\Ryzen\Documents\UNI\El Panadero Sin el Pan\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\cxx\RelWithDebInfo\v17672z3\obj\arm64-v8a

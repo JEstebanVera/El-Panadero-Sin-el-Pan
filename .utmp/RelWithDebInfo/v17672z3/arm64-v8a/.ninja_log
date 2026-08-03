@@ -1,0 +1,12 @@
+# ninja log v5
+151	7190	8074116198429403	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	a719d8d2468e8f2c
+7239	10544	8074116227611239	C:/Users/Ryzen/Documents/UNI/El Panadero Sin el Pan/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/v17672z3/obj/arm64-v8a/libswappywrapper.so	667b8dcf21e4ac9c
+105	30202	8074116429013603	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	a73b6da25bd7471d
+43	30581	8074116432744112	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	635e881f3d9dc04
+91	30585	8074116432799119	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	c0d493ce48a9a580
+138	30649	8074116433463857	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	aafa9765b34bd2f2
+32	30777	8074116434788338	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	26aa81b80dc1a345
+80	31080	8074116437575218	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	4308baac7ef20cf9
+2	31097	8074116437951438	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	eba65a3053a4a855
+118	31886	8074116445657336	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	72c25b1883dc4509
+31887	33025	8074116456872096	C:/Users/Ryzen/Documents/UNI/El Panadero Sin el Pan/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/v17672z3/obj/arm64-v8a/libgame.so	484185d77ff616d3

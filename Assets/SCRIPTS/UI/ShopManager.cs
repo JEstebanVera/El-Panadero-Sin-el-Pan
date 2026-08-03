@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ShopManager : MonoBehaviour
 {
@@ -118,14 +119,26 @@ public class ShopManager : MonoBehaviour
         public void UpdateButton(int index, bool unlocked, int selectedIndex)
         {
             if (!unlocked)
-                buttonText.text = price + " Monedas";
+                buttonText.text = price + " Coins";
             else if (selectedIndex == index)
-                buttonText.text = "Equipado";
+                buttonText.text = "Equipada";
             else
                 buttonText.text = "Equipar";
 
             if (selectedIndicator != null)
                 selectedIndicator.SetActive(selectedIndex == index);
+
+            // Mantener el color del botón transparente siempre
+            UnityEngine.UI.Button btn = buttonText.GetComponentInParent<UnityEngine.UI.Button>();
+            if (btn != null)
+            {
+                ColorBlock colors = btn.colors;
+                colors.normalColor = new Color(0, 0, 0, 0);
+                colors.highlightedColor = new Color(0, 0, 0, 0);
+                colors.pressedColor = new Color(0, 0, 0, 0.1f);
+                colors.selectedColor = new Color(0, 0, 0, 0);
+                btn.colors = colors;
+            }
         }
     }
 }

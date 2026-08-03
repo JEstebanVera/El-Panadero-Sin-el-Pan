@@ -28,11 +28,12 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     public GameObject gameOverPanel;
+    public TextMeshProUGUI gameOverTimeText;
 
     [Header("Speed")]
     public PlayerMovement playerMovement;
     private float speedTimer = 0f;
-    public float speedIncreaseInterval = 5f; // cada 5 segundos
+    public float speedIncreaseInterval = 15f; // cada 15 segundos
     public float speedIncreaseAmount = 1f;
 
 
@@ -79,18 +80,23 @@ public class GameManager : MonoBehaviour
         coinText.text =  coinsThisRun.ToString();
     }
 
-
+    private bool isDead = false;
     public void TakeDamage(GameObject obstacleObj, GameObject playerObj)
     {
+        if (isDead) return;
+
+        if (lives - 1 <= 0) // Si esta llamada va a ser la muerte
+            isDead = true;  // Bloquear inmediatamente antes de cualquier otra cosa
+
         if (hitParticlesPrefab != null)
         {
             GameObject particles = Instantiate(hitParticlesPrefab, obstacleObj.transform.position, Quaternion.identity);
-            Destroy(particles, 2f); // Destruir partículas 
+            Destroy(particles, 2f);
         }
 
         Destroy(obstacleObj);
-
         lives--;
+
         if (audioSource != null && damageSound != null)
             audioSource.PlayOneShot(damageSound);
 
@@ -100,29 +106,36 @@ public class GameManager : MonoBehaviour
         {
             gameActive = false;
             lifeImage.gameObject.SetActive(false);
-            gameOverPanel.SetActive(true);
 
-            // Guardar datos
             int savedCoins = PlayerPrefs.GetInt("TotalCoins", 0);
-            int newTotal = savedCoins + coinsThisRun;
-            PlayerPrefs.SetInt("TotalCoins", newTotal);
+            PlayerPrefs.SetInt("TotalCoins", savedCoins + coinsThisRun);
 
             float bestTime = PlayerPrefs.GetFloat("BestTime", 0f);
             if (timeAlive > bestTime)
                 PlayerPrefs.SetFloat("BestTime", timeAlive);
 
             HighscoreTable.AddEntry(timeAlive);
+            PlayerPrefs.SetInt("BestTimeMigrated", 1);
             PlayerPrefs.Save();
 
-            // Muerte visual
             PlayerDeath(playerObj);
-
-            Invoke("GoToMainMenu", 3f); // Más tiempo para que se vean las partículas
+            Invoke("ShowGameOverPanel", 1f);
+            Invoke("GoToMainMenu", 3f);
         }
         else
         {
             UpdateLifeHUD();
         }
+    }
+
+    private void ShowGameOverPanel()
+    {
+        // Mostrar tiempo de esta partida en el panel
+        int minutes = Mathf.FloorToInt(timeAlive / 60f);
+        int seconds = Mathf.FloorToInt(timeAlive % 60f);
+        gameOverTimeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+        gameOverPanel.SetActive(true);
     }
 
     private void PlayerDeath(GameObject playerObj)
@@ -161,8 +174,6 @@ public class GameManager : MonoBehaviour
         lifeImage.sprite = lifeSprites[3 - lives];
     }
 
-    private void GoToMainMenu()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
+
+
 }
